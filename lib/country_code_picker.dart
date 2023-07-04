@@ -31,9 +31,7 @@ class CountryCodePicker extends StatefulWidget {
   final bool isFlagVisible;
   final TextEditingController? controller;
   final bool isTextField;
-  // If there is any suffix need to set
 
-  final Widget? suffixIcon;
 
   /// Barrier color of ModalBottomSheet
   final Color? barrierColor;
@@ -129,7 +127,7 @@ class CountryCodePicker extends StatefulWidget {
     this.dialogBackgroundColor,
     this.closeIcon = const Icon(Icons.close),
     this.countryList = codes,
-    this.suffixIcon,
+  
     Key? key,
     this.prefix,
     this.isTextField = false,
@@ -203,7 +201,7 @@ class CountryCodePickerState extends State<CountryCodePicker> {
                             ),
                           )
                         : const SizedBox()),
-                suffixIcon: widget.suffixIcon),
+                ),
       );
 if(!widget.isTextField){
    internalWidget = TextButton(
