@@ -24,10 +24,16 @@ class CountryCodePicker extends StatefulWidget {
   final TextStyle? searchStyle;
   final TextStyle? dialogTextStyle;
   final WidgetBuilder? emptySearchBuilder;
-  final Function(CountryCode?)? builder;
+  final Widget Function(CountryCode?)? builder;
   final bool enabled;
   final TextOverflow textOverflow;
   final Icon closeIcon;
+  final bool isFlagVisible;
+  final TextEditingController? controller;
+  final bool isTextField;
+  // If there is any suffix need to set
+
+  final Widget? suffixIcon;
 
   /// Barrier color of ModalBottomSheet
   final Color? barrierColor;
@@ -85,6 +91,10 @@ class CountryCodePicker extends StatefulWidget {
   /// with customized codes.
   final List<Map<String, String>> countryList;
 
+  final Widget? prefix;
+
+  final InputDecoration? inputDecoration;
+
   const CountryCodePicker({
     this.onChanged,
     this.onInit,
@@ -119,7 +129,13 @@ class CountryCodePicker extends StatefulWidget {
     this.dialogBackgroundColor,
     this.closeIcon = const Icon(Icons.close),
     this.countryList = codes,
+    this.suffixIcon,
     Key? key,
+    this.prefix,
+    this.isTextField = false,
+    this.controller,
+    this.isFlagVisible = false,
+    this.inputDecoration,
   }) : super(key: key);
 
   @override
@@ -165,7 +181,32 @@ class CountryCodePickerState extends State<CountryCodePicker> {
         child: widget.builder!(selectedItem),
       );
     } else {
-      internalWidget = TextButton(
+      internalWidget = TextField(
+        controller: widget.controller,
+        onTap: showCountryCodePickerDialog,
+        decoration: widget.inputDecoration ??
+            InputDecoration(
+                prefix: widget.prefix ??
+                    (widget.isFlagVisible
+                        ? Container(
+                            clipBehavior: widget.flagDecoration == null
+                                ? Clip.none
+                                : Clip.hardEdge,
+                            decoration: widget.flagDecoration,
+                            margin: widget.alignLeft
+                                ? const EdgeInsets.only(right: 16.0, left: 8.0)
+                                : const EdgeInsets.only(right: 16.0),
+                            child: Image.asset(
+                              selectedItem!.flagUri!,
+                              package: 'country_code_picker',
+                              width: widget.flagWidth,
+                            ),
+                          )
+                        : const SizedBox()),
+                suffixIcon: widget.suffixIcon),
+      );
+if(!widget.isTextField){
+   internalWidget = TextButton(
         onPressed: widget.enabled ? showCountryCodePickerDialog : null,
         child: Padding(
           padding: widget.padding,
@@ -224,6 +265,8 @@ class CountryCodePickerState extends State<CountryCodePicker> {
           ),
         ),
       );
+   
+}
     }
     return internalWidget;
   }
@@ -315,6 +358,7 @@ class CountryCodePickerState extends State<CountryCodePicker> {
     if (item != null) {
       setState(() {
         selectedItem = item;
+        widget.controller?.text = selectedItem?.name ?? '';
       });
 
       _publishSelection(item);

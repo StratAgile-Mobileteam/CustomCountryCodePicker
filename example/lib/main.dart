@@ -5,7 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 void main() => runApp(const MyApp());
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   MyAppState createState() => MyAppState();
@@ -100,17 +100,13 @@ class MyAppState extends State<MyApp> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              CountryCodePicker(
+              CountryCodePicker(controller: TextEditingController(),
                 onChanged: print,
-                // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
-                initialSelection: 'IT',
-                favorite: const ['+39', 'FR'],
-                countryFilter: const ['IT', 'FR'],
-                showFlagDialog: false,
-                comparator: (a, b) => b.name.compareTo(a.name),
-                //Get the country information relevant to the initial selection
-                onInit: (code) => debugPrint(
-                    "on init ${code.name} ${code.dialCode} ${code.name}"),
+                initialSelection: null,isTextField: true,
+          showOnlyCountryWhenClosed: true,
+          alignLeft: true,
+          padding: const EdgeInsets.all(0),
+          backgroundColor: Colors.white,
               ),
               CountryCodePicker(
                 onChanged: print,
